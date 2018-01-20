@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+group 'flavor.pie'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.spongepowered.org/maven/'
+    }
+    maven {
+        url 'https://repo.bstats.org/content/repositories/releases'
+    }
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+configurations {
+    compile.extendsFrom shadow
+}
+
+dependencies {
+    compile 'org.spongepowered:spongeapi:7.0.0'
+    compile name: 'enderpay-1.12.2-1.0.1.0'
+    shadow 'org.bstats:bstats-sponge-lite:1.2'
+}
+
+jar.enabled = false
+build.dependsOn shadowJar
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    classifier = null
+    relocate 'org.bstats', 'flavor.pie.enderpaybridge.metrics'
+}
